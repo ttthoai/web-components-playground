@@ -2,10 +2,94 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>Web Components Playground</title>
+    <title>GD-INSIGHT - Web Components Playground</title>
     <script type="module" src="https://staging.anywhere.gooddata.com/components/d96366a8366b4db481950eaa2e20eefe.js?auth=sso"></script>
 </head>
 <body>
-    <gd-insight style="width: 500px; height: 500px;" insight="30d1efbd-c2e9-4c0e-b0bf-72b2b8d5ffe2"></gd-insight>
+    <menu>
+        <a href="./index.html">gd-insight</a>
+        <a href="./dashboard.html">gd-dashboard</a>
+    </menu>
+    <section>
+        <h2>Configure</h2>
+        <p>Useful to test live updates to the chart properties.</p>
+        <p><label>
+            Select insight
+            <select id="insight-selector">
+                <option selected value="47c793ff-3f38-438e-888c-e66d23072f16">A line chart</option>
+                <option value="30d1efbd-c2e9-4c0e-b0bf-72b2b8d5ffe2">Pie chart</option>
+            </select>
+        </label></p>
+        <p><label>
+            Select locale
+            <select id="locale">
+                <option selected value="en-US">en-US</option>
+                <option value="ja-JP">ja-JP</option>
+            </select>
+        </label></p>
+        <p><label><input type="checkbox" id="show-title"/>Show title</label></p>
+        <p><label>Title override <input type="text" value="" placeholder="Keep blank to use server title" id="title" /></label></p>
+    </section>
+    <section>
+        <h2>Result</h2>
+        <gd-insight
+                id="insight"
+                style="height: 500px;"
+                insight="47c793ff-3f38-438e-888c-e66d23072f16"
+        ></gd-insight>
+    </section>
+    <section>
+        <h2>Event log</h2>
+        <div id="log" style="height:20em;overflow-y:auto;border:1px dotted gray;"></div>
+    </section>
+    <script type="module">
+        const insight = document.getElementById("insight");
+        const insightSelector = document.getElementById("insight-selector");
+        const localeSelector = document.getElementById("locale");
+        const eventLog = document.getElementById("log");
+        const titleInput = document.getElementById("title");
+        const titleToggle = document.getElementById("show-title");
+
+        const updateTitle = () => {
+            if (!titleToggle.checked) {
+                // No title
+                insight.removeAttribute("title");
+                return;
+            }
+            if (titleInput.value) {
+                // Overridden title
+                insight.setAttribute("title", titleInput.value);
+                return;
+            }
+            // Default title from server
+            insight.setAttribute("title", "");
+        };
+
+        insightSelector.addEventListener("change", e => {
+            insight.setAttribute("insight", e.target.value);
+        });
+        localeSelector.addEventListener("change", e => {
+            insight.setAttribute("locale", e.target.value);
+        });
+        titleInput.addEventListener("change", updateTitle);
+        titleToggle.addEventListener("change", updateTitle);
+
+        // Log events
+        [
+            "drill", "error", "exportReady", "loadingChanged", "insightLoaded",
+        ].map(eventType => {
+            insight.addEventListener(eventType, e => {
+                const div = document.createElement("pre");
+                div.style.height = "1em";
+                // div.style.whiteSpace = "nowrap";
+                div.style.overflow = "hidden";
+                div.style.borderBottom = "1px dashed gray";
+                div.innerText = `${eventType.padEnd(20)}: ${JSON.stringify(e.detail)}`;
+                eventLog.appendChild(div);
+
+                console.log(eventType, e.detail);
+            });
+        });
+    </script>
 </body>
 </html>
