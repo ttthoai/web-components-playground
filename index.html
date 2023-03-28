@@ -3,7 +3,14 @@
 <head>
     <meta charset="utf-8" />
     <title>GD-INSIGHT - Web Components Playground</title>
-    <script type="module" src="https://staging.anywhere.gooddata.com/components/d96366a8366b4db481950eaa2e20eefe.js?auth=sso"></script>
+    <script type="module" src="https://staging.anywhere.gooddata.com/components/hoai_ws.js?auth=sso"></script>
+    <!-- all supported attributes -->
+    <gd-insight
+        insight="7d0f151a-0603-41f5-805c-95d222c969e3"
+        workspace="hoai_ws"
+        locale="en_US"
+        title="Custom insight title"
+></gd-insight>
 </head>
 <body>
     <menu>
@@ -18,8 +25,8 @@
         <p><label>
             Select insight
             <select id="insight-selector">
-                <option selected value="47c793ff-3f38-438e-888c-e66d23072f16">A line chart</option>
-                <option value="30d1efbd-c2e9-4c0e-b0bf-72b2b8d5ffe2">Pie chart</option>
+                <option selected value="7d0f151a-0603-41f5-805c-95d222c969e3">A table chart</option>
+                <option value="7d0f151a-0603-41f5-805c-95d222c969e3">Pie chart</option>
             </select>
         </label></p>
         <p><label>
@@ -37,7 +44,7 @@
         <gd-insight
                 id="insight"
                 style="height: 500px;"
-                insight="47c793ff-3f38-438e-888c-e66d23072f16"
+                insight="7d0f151a-0603-41f5-805c-95d222c969e3"
         ></gd-insight>
     </section>
     <section>
